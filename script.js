@@ -75,11 +75,13 @@ function addNote(event) {
 
   if (!text) {
     errorMessage.textContent = 'Please type a note first.';
+    noteInput.setAttribute('aria-invalid', 'true');
     return;
   }
 
   if (text.length > 200) {
     errorMessage.textContent = 'Notes must be 200 characters or fewer.';
+    noteInput.setAttribute('aria-invalid', 'true');
     return;
   }
 
@@ -95,6 +97,7 @@ function addNote(event) {
   render();
 
   noteInput.value = '';
+  noteInput.removeAttribute('aria-invalid');
   errorMessage.textContent = '';
   noteInput.focus();
 }
@@ -116,7 +119,10 @@ function loadNotes() {
     try {
       const parsedNotes = JSON.parse(savedNotes);
       if (Array.isArray(parsedNotes)) {
-        notes = parsedNotes;
+        notes = parsedNotes.filter((note) =>
+          note && typeof note.id === 'string' && typeof note.text === 'string' &&
+          typeof note.category === 'string' && typeof note.createdAt === 'string'
+        );
       }
     } catch (error) {
       notes = [];
