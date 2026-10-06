@@ -10,9 +10,11 @@ let notes = [];
 
 function render() {
   const searchTerm = searchInput.value.trim().toLowerCase();
-  const filteredNotes = notes.filter((note) =>
-    note.text.toLowerCase().includes(searchTerm)
-  );
+  const searchWords = searchTerm.split(/\s+/).filter(Boolean);
+  const filteredNotes = notes.filter((note) => {
+    const noteText = note.text.toLowerCase();
+    return searchWords.every((word) => noteText.includes(word));
+  });
 
   notesList.replaceChildren();
 
